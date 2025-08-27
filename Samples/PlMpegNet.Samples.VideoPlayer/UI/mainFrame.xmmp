@@ -1,0 +1,14 @@
+<Project>
+  <Project.ExportOptions Namespace="PlMpegNet.Samples.VideoPlayer.UI" Class="MainFrame" OutputPath="D:\Projects\StbSharp\PlMpegNet\Samples\PlMpegNet.Samples.VideoPlayer\UI" />
+  <VerticalStackPanel Spacing="4">
+    <Panel Id="_panelVideo" StackPanel.ProportionType="Fill" />
+    <HorizontalStackPanel Spacing="8">
+      <HorizontalSlider Maximum="1" StackPanel.ProportionType="Fill" />
+      <Label Text="00:05/03:00" Id="_labelTime" />
+    </HorizontalStackPanel>
+    <HorizontalStackPanel Spacing="8" HorizontalAlignment="Right">
+      <Label Text="Volume" />
+      <HorizontalSlider Maximum="1" Value="1" Width="200" Id="_sliderVolume" />
+    </HorizontalStackPanel>
+  </VerticalStackPanel>
+</Project>
