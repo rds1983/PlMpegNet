@@ -8,14 +8,10 @@
 #include "pl_mpeg.h"
 
 using namespace System;
+using namespace System::Runtime::InteropServices;
 
 namespace PlMpegNativeWrapper {
 	std::shared_ptr<plm_t> _plm;
-
-	public ref class FrameInfo
-	{
-
-	};
 
 	public ref class Native
 	{
@@ -53,6 +49,19 @@ namespace PlMpegNativeWrapper {
 			pin_ptr<unsigned char> p = &bytes[0];
 			unsigned char* ptr = (unsigned char*)p;
 			plm_frame_to_rgb(frame, ptr, width * 3);
+
+			return true;
+		}
+
+		static bool get_next_frame_audio(array<float>^ data)
+		{
+			plm_samples_t* samples = plm_decode_audio(_plm.get());
+			if (!samples)
+			{
+				return false;
+			}
+
+			Marshal::Copy(IntPtr((void*)samples->interleaved), data, 0, samples->count * 2);
 
 			return true;
 		}

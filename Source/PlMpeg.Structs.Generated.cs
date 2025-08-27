@@ -42,7 +42,7 @@ namespace PlMpegSharp
 			public delegate2 load_callback;
 			public delegate3 seek_callback;
 			public delegate4 tell_callback;
-			public plm_t load_callback_user_data;
+			public object load_callback_user_data;
 			public byte* bytes;
 			public plm_buffer_mode mode;
 		}

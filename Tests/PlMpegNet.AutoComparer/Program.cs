@@ -1,4 +1,5 @@
 ﻿using PlMpegNativeWrapper;
+using PlMpegNet.AutoComparer;
 using System;
 using System.IO;
 using static PlMpegSharp.PlMpeg;
@@ -26,13 +27,15 @@ namespace PlMpegSharp.AutoComparer
 
 			Native.create_with_memory(data);
 
-			plm_set_audio_enabled(plm, 0);
-			Native.set_audio_enabled(false);
+			plm_set_audio_enabled(plm, 1);
+			Native.set_audio_enabled(true);
 
 			var width = plm_get_width(plm);
 			var height = plm_get_height(plm);
 			var pixels = new byte[width * height * 3];
 			var pixels2 = new byte[width * height * 3];
+
+			var audio2 = new float[10000];
 
 			plm_frame_t frame;
 
@@ -48,11 +51,26 @@ namespace PlMpegSharp.AutoComparer
 
 				Native.get_next_frame_rgb(pixels2);
 
+				// Compare pixels
 				for (var j = 0; j < pixels.Length; j++)
 				{
 					if (pixels[j] != pixels2[j])
 					{
 						Console.WriteLine($"Different colors: #{i} frame, pos {j}");
+					}
+				}
+
+				// Compare audio
+				var samples = plm_decode_audio(plm);
+				Native.get_next_frame_audio(audio2);
+				if (samples != null)
+				{
+					for (var j = 0; j < samples.count * 2; ++j)
+					{
+						if (!samples.interleaved[i].EpsilonEquals(audio2[i]))
+						{
+							Console.WriteLine($"Different samples: #{i} frame, pos {j}");
+						}
 					}
 				}
 

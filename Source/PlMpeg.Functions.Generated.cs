@@ -10,9 +10,9 @@ namespace PlMpegSharp
 	{
 		public delegate void delegate0(plm_t arg0, plm_frame_t arg1, object arg2);
 		public delegate void delegate1(plm_t arg0, plm_samples_t arg1, object arg2);
-		public delegate void delegate2(plm_buffer_t arg0, plm_t arg1);
-		public delegate void delegate3(plm_buffer_t arg0, ulong arg1, plm_t arg2);
-		public delegate ulong delegate4(plm_buffer_t arg0, plm_t arg1);
+		public delegate void delegate2(plm_buffer_t arg0, object arg1);
+		public delegate void delegate3(plm_buffer_t arg0, ulong arg1, object arg2);
+		public delegate ulong delegate4(plm_buffer_t arg0, object arg1);
 
 		public static plm_t plm_create_with_memory(byte* bytes, ulong length, int free_when_done)
 		{
@@ -188,12 +188,12 @@ namespace PlMpegSharp
 		{
 			return (int)(self.has_ended);
 		}
-		public static void plm_set_video_decode_callback(plm_t self, delegate0 fp, plm_t user)
+		public static void plm_set_video_decode_callback(plm_t self, delegate0 fp, object user)
 		{
 			self.video_decode_callback = fp;
 			self.video_decode_callback_user_data = user;
 		}
-		public static void plm_set_audio_decode_callback(plm_t self, delegate1 fp, plm_t user)
+		public static void plm_set_audio_decode_callback(plm_t self, delegate1 fp, object user)
 		{
 			self.audio_decode_callback = fp;
 			self.audio_decode_callback_user_data = user;
@@ -396,7 +396,7 @@ namespace PlMpegSharp
 			self.has_ended = (int)(0);
 			return frame;
 		}
-		public static plm_buffer_t plm_buffer_create_with_callbacks(delegate2 load_callback, delegate3 seek_callback, delegate4 tell_callback, ulong length, plm_t user)
+		public static plm_buffer_t plm_buffer_create_with_callbacks(delegate2 load_callback, delegate3 seek_callback, delegate4 tell_callback, ulong length, object user)
 		{
 			plm_buffer_t self = plm_buffer_create_with_capacity((ulong)(128 * 1024));
 			self.mode = plm_buffer_mode.PLM_BUFFER_MODE_FILE;
@@ -485,7 +485,7 @@ namespace PlMpegSharp
 		{
 			self.total_size = (ulong)(self.length);
 		}
-		public static void plm_buffer_set_load_callback(plm_buffer_t self, delegate2 fp, plm_t user)
+		public static void plm_buffer_set_load_callback(plm_buffer_t self, delegate2 fp, object user)
 		{
 			self.load_callback = fp;
 			self.load_callback_user_data = user;
@@ -1383,12 +1383,12 @@ namespace PlMpegSharp
 				self.has_ended = (int)(1);
 			}
 		}
-		public static void plm_read_video_packet(plm_buffer_t buffer, plm_t user)
+		public static void plm_read_video_packet(plm_buffer_t buffer, object user)
 		{
 			plm_t self = (plm_t)(user);
 			plm_read_packets(self, (int)(self.video_packet_type));
 		}
-		public static void plm_read_audio_packet(plm_buffer_t buffer, plm_t user)
+		public static void plm_read_audio_packet(plm_buffer_t buffer, object user)
 		{
 			plm_t self = (plm_t)(user);
 			plm_read_packets(self, (int)(self.audio_packet_type));
@@ -1554,7 +1554,7 @@ namespace PlMpegSharp
 		public static int plm_buffer_find_start_code(plm_buffer_t self, int code)
 		{
 			int current = (int)(0);
-			while ((1) != 0)
+			while (true)
 			{
 				current = (int)(plm_buffer_next_start_code(self));
 				if (((current) == (code)) || ((current) == (-1)))
@@ -1562,8 +1562,6 @@ namespace PlMpegSharp
 					return (int)(current);
 				}
 			}
-
-			return (int)(-1);
 		}
 		public static short plm_buffer_read_vlc(plm_buffer_t self, plm_vlc_t* table)
 		{
@@ -2773,7 +2771,7 @@ namespace PlMpegSharp
 		{
 			int tab4 = (int)(PLM_AUDIO_QUANT_LUT_STEP_3[tab3, sb]);
 			int qtab = (int)(PLM_AUDIO_QUANT_LUT_STEP_4[tab4 & 15, plm_buffer_read(self.buffer, (int)(tab4 >> 4))]);
-			return (qtab) != 0 ? (PLM_AUDIO_QUANT_TAB[qtab - 1]) : default;
+			return (qtab) != 0 ? (PLM_AUDIO_QUANT_TAB[qtab - 1]) : (plm_quantizer_spec_t?)null;
 		}
 		public static void plm_audio_read_samples(plm_audio_t self, int ch, int sb, int part)
 		{
