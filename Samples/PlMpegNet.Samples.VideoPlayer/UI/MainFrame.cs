@@ -1,5 +1,5 @@
-using Microsoft.Xna.Framework;
 using Myra.Graphics2D.UI;
+using PlMpegNet.Samples.VideoPlayer.MonoGame;
 using PlMpegNet.Samples.VideoPlayer.MonoGame.UI;
 
 namespace PlMpegNet.Samples.VideoPlayer.UI
@@ -7,7 +7,26 @@ namespace PlMpegNet.Samples.VideoPlayer.UI
 	public partial class MainFrame
 	{
 		private readonly VideoPlayerWidget _videoPlayer;
-		
+
+		public float PositionInSeconds
+		{
+			get => _videoPlayer.PositionInSeconds;
+
+			set
+			{
+				if (value.EpsilonEquals(_videoPlayer.PositionInSeconds))
+				{
+					return;
+				}
+
+				_videoPlayer.PositionInSeconds = value;
+				UpdateTimeLabel();
+
+				var sliderPos = _videoPlayer.PositionInSeconds / _videoPlayer.DurationInSeconds;
+				_sliderTime.Value = sliderPos;
+			}
+		}
+
 		public MainFrame()
 		{
 			BuildUI();
@@ -26,11 +45,12 @@ namespace PlMpegNet.Samples.VideoPlayer.UI
 		public void LoadVideo(string path)
 		{
 			_videoPlayer.Load(path);
+			UpdateTimeLabel();
 		}
 
-		public void UpdateTime(GameTime gameTime)
+		private void UpdateTimeLabel()
 		{
-			_videoPlayer.UpdateTime(gameTime);
+			_labelTime.Text = _videoPlayer.PositionInSeconds.FormatTimeInSeconds() + "/" + _videoPlayer.DurationInSeconds.FormatTimeInSeconds();
 		}
 	}
 }

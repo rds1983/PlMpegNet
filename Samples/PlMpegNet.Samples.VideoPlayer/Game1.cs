@@ -74,7 +74,7 @@ namespace PlMpegNet.Samples.VideoPlayer
 				Exit();
 
 			// TODO: Add your update logic here
-			_mainFrame.UpdateTime(gameTime);
+			_mainFrame.PositionInSeconds = (float)gameTime.TotalGameTime.TotalSeconds;
 		}
 
 		/// <summary>

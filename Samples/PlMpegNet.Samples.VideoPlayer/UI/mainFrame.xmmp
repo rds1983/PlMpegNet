@@ -3,7 +3,10 @@
   <VerticalStackPanel Spacing="4">
     <Panel Id="_panelVideo" StackPanel.ProportionType="Fill" />
     <HorizontalStackPanel Spacing="8">
-      <HorizontalSlider Maximum="1" StackPanel.ProportionType="Fill" />
+      <Button Id="_buttonPlayStop">
+        <Label Text="Play" />
+      </Button>
+      <HorizontalSlider Maximum="1" Value="0.5" Id="_sliderTime" StackPanel.ProportionType="Fill" />
       <Label Text="00:05/03:00" Id="_labelTime" />
     </HorizontalStackPanel>
     <HorizontalStackPanel Spacing="8" HorizontalAlignment="Right">

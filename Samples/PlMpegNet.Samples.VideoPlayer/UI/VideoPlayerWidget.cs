@@ -18,6 +18,7 @@ namespace PlMpegNet.Samples.VideoPlayer.MonoGame.UI
 		private Point _size;
 		private byte[] _dataRgba, _audioBuffer;
 		private Texture2D _texture;
+		private float _positionInSeconds;
 
 		public float Volume
 		{
@@ -25,6 +26,25 @@ namespace PlMpegNet.Samples.VideoPlayer.MonoGame.UI
 
 			set => _effect.Volume = value;
 		}
+
+		public float PositionInSeconds
+		{
+			get => _positionInSeconds;
+
+			set
+			{
+				if (value.EpsilonEquals(_positionInSeconds))
+				{
+					return;
+				}
+
+				var oldValue = _positionInSeconds;
+				_positionInSeconds = value;
+				plm_decode(_plm, value - oldValue);
+			}
+		}
+
+		public float DurationInSeconds { get; private set; }
 
 		private void OnVideoCallback(plm_t plm, plm_frame_t arg1, object arg2)
 		{
@@ -60,7 +80,7 @@ namespace PlMpegNet.Samples.VideoPlayer.MonoGame.UI
 			{
 				_audioBuffer = new byte[size * 2];
 			}
-			
+
 			for (var i = 0; i < size; ++i)
 			{
 				var floatSample = samples.interleaved[i];
@@ -106,7 +126,6 @@ namespace PlMpegNet.Samples.VideoPlayer.MonoGame.UI
 				}
 			}
 
-
 			if (plm_probe(_plm, 5000 * 1024) == 0)
 			{
 				throw new Exception("No MPEG video or audio streams found.");
@@ -124,22 +143,20 @@ namespace PlMpegNet.Samples.VideoPlayer.MonoGame.UI
 
 			_dataRgba = new byte[_size.X * _size.Y * 4];
 
+			DurationInSeconds = (float)plm_get_duration(_plm);
+			_positionInSeconds = 0;
+
 			var sampleRate = plm_get_samplerate(_plm);
 			Debug.WriteLine($"Sample rate: {sampleRate}");
 
 			_effect = new DynamicSoundEffectInstance(sampleRate, (AudioChannels)2)
 			{
-				Volume = 0.5f
+				Volume = 1f
 			};
 
 			_effect.Play();
 
 			GC.Collect();
-		}
-
-		public void UpdateTime(GameTime gameTime)
-		{
-			plm_decode(_plm, gameTime.ElapsedGameTime.TotalSeconds);
 		}
 
 		public override void InternalRender(RenderContext context)
