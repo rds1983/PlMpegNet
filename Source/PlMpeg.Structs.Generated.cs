@@ -24,9 +24,9 @@ namespace PlMpegSharp
 			public double audio_lead_time;
 			public plm_buffer_t audio_buffer;
 			public plm_audio_t audio_decoder;
-			public delegate0 video_decode_callback;
+			public plm_video_decode_callback video_decode_callback;
 			public object video_decode_callback_user_data;
-			public delegate1 audio_decode_callback;
+			public plm_audio_decode_callback audio_decode_callback;
 			public object audio_decode_callback_user_data;
 		}
 
@@ -39,9 +39,9 @@ namespace PlMpegSharp
 			public int discard_read_bytes;
 			public int has_ended;
 			public int free_when_done;
-			public delegate2 load_callback;
-			public delegate3 seek_callback;
-			public delegate4 tell_callback;
+			public plm_buffer_load_callback load_callback;
+			public plm_buffer_seek_callback seek_callback;
+			public plm_buffer_tell_callback tell_callback;
 			public object load_callback_user_data;
 			public byte* bytes;
 			public plm_buffer_mode mode;

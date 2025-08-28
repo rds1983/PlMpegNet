@@ -1,9 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Threading;
+﻿using System.Threading;
 
 namespace Hebron.Runtime
 {
-	public unsafe static class MemoryStats
+	public unsafe static class PlMpegMemoryStats
 	{
 		private static int _allocations;
 		 

@@ -21,13 +21,8 @@ namespace PlMpegSharp.Samples.ExtractFrames
 			}
 
 			var file = Path.GetFileNameWithoutExtension(Path.GetFileName(args[0]));
-			var data = File.ReadAllBytes(args[0]);
-
-			plm_t plm;
-			fixed (byte* ptr = data)
-			{
-				plm = plm_create_with_memory(ptr, (ulong)data.Length, 0);
-			}
+			var inputStream = File.OpenRead(args[0]);
+			var plm = plm_create_with_stream(inputStream);
 
 			plm_set_audio_enabled(plm, 0);
 

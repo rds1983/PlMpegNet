@@ -116,15 +116,8 @@ namespace PlMpegNet.Samples.VideoPlayer.MonoGame.UI
 
 		public void Load(string path)
 		{
-			var data = File.ReadAllBytes(path);
-
-			unsafe
-			{
-				fixed (byte* ptr = data)
-				{
-					_plm = plm_create_with_memory(ptr, (ulong)data.Length, 0);
-				}
-			}
+			var stream = File.OpenRead(path);
+			_plm = plm_create_with_stream(stream);
 
 			if (plm_probe(_plm, 5000 * 1024) == 0)
 			{

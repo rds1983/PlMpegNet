@@ -3,7 +3,6 @@
 #include <memory>
 
 #define PL_MPEG_IMPLEMENTATION
-#define PLM_NO_STDIO
 
 #include "pl_mpeg.h"
 
@@ -16,6 +15,22 @@ namespace PlMpegNativeWrapper {
 	public ref class Native
 	{
 	public:
+		static bool create_with_file(String^ path)
+		{
+			char* str2 = (char*)(void*)Marshal::StringToHGlobalAnsi(path);
+			auto plm = plm_create_with_filename(str2);
+			Marshal::FreeHGlobal((IntPtr)str2);
+
+			if (!plm)
+			{
+				return false;
+			}
+
+			_plm = std::shared_ptr<plm_t>(plm);
+
+			return true;
+		}
+
 		static bool create_with_memory(array<unsigned char>^ bytes)
 		{
 			pin_ptr<unsigned char> p = &bytes[0];

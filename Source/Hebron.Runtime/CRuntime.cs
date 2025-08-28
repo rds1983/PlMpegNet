@@ -16,7 +16,7 @@ namespace Hebron.Runtime
 		{
 			var ptr = Marshal.AllocHGlobal((int)size);
 
-			MemoryStats.Allocated();
+			PlMpegMemoryStats.Allocated();
 
 			return ptr.ToPointer();
 		}
@@ -28,7 +28,7 @@ namespace Hebron.Runtime
 
 			var ptr = new IntPtr(a);
 			Marshal.FreeHGlobal(ptr);
-			MemoryStats.Freed();
+			PlMpegMemoryStats.Freed();
 		}
 
 		public static void memcpy(void* a, void* b, long size)

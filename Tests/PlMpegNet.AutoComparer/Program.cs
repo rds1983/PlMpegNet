@@ -2,6 +2,7 @@
 using PlMpegNet.AutoComparer;
 using System;
 using System.IO;
+using System.Runtime.InteropServices;
 using static PlMpegSharp.PlMpeg;
 
 namespace PlMpegSharp.AutoComparer
@@ -17,15 +18,11 @@ namespace PlMpegSharp.AutoComparer
 			}
 
 			var file = Path.GetFileNameWithoutExtension(Path.GetFileName(args[0]));
-			var data = File.ReadAllBytes(args[0]);
 
-			plm_t plm;
-			fixed (byte* ptr = data)
-			{
-				plm = plm_create_with_memory(ptr, (ulong)data.Length, 0);
-			}
+			var inputStream = File.OpenRead(args[0]);
+			var plm = plm_create_with_stream(inputStream);
 
-			Native.create_with_memory(data);
+			Native.create_with_file(args[0]);
 
 			plm_set_audio_enabled(plm, 1);
 			Native.set_audio_enabled(true);

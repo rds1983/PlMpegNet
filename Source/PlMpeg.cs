@@ -1,7 +1,105 @@
-﻿namespace PlMpegSharp
+﻿using System;
+using System.Drawing;
+using System.IO;
+using System.Runtime.InteropServices;
+
+namespace PlMpegSharp
 {
 	public static unsafe partial class PlMpeg
 	{
+		private class ReadContext
+		{
+			public Stream _inputStream;
+			public byte[] _buffer;
+
+			public ReadContext(Stream stream)
+			{
+				_inputStream = stream ?? throw new NullReferenceException(nameof(stream));
+			}
+
+			public void LoadCallback(plm_buffer_t buffer)
+			{
+				if (buffer.discard_read_bytes == 1)
+				{
+					plm_buffer_discard_read_bytes(buffer);
+				}
+
+				var bytesAvailable = (int)(buffer.capacity - buffer.length);
+				if (_buffer == null || _buffer.Length < bytesAvailable)
+				{
+					_buffer = new byte[bytesAvailable * 2];
+				}
+
+				var bytesRead = _inputStream.Read(_buffer, 0, bytesAvailable);
+				if (bytesRead > 0)
+				{
+					Marshal.Copy(_buffer, 0, new IntPtr(buffer.bytes + buffer.length), bytesRead);
+					buffer.length += (ulong)bytesRead;
+				}
+				else
+				{
+					buffer.has_ended = 1;
+				}
+			}
+
+			public void SeekCallback(plm_buffer_t buffer, ulong offset)
+			{
+				_inputStream.Seek((long)offset, SeekOrigin.Begin);
+			}
+
+			public ulong TellCallback(plm_buffer_t buffer)
+			{
+				return (ulong)_inputStream.Position;
+			}
+		}
+
+		private static void LoadCallback(plm_buffer_t buffer, object user)
+		{
+			var context = (ReadContext)user;
+			context.LoadCallback(buffer);
+		}
+
+		private static void SeekCallback(plm_buffer_t buffer, ulong offset, object user)
+		{
+			var context = (ReadContext)user;
+			context.SeekCallback(buffer, offset);
+		}
+
+		private static ulong TellCallback(plm_buffer_t buffer, object user)
+		{
+			var context = (ReadContext)user;
+			return context.TellCallback(buffer);
+		}
+
+		public static plm_t plm_create_with_stream(Stream stream)
+		{
+			if (stream == null)
+			{
+				throw new ArgumentNullException(nameof(stream));
+			}
+
+			var size = stream.Seek(0, SeekOrigin.End);
+			stream.Seek(0, SeekOrigin.Begin);
+
+			var context = new ReadContext(stream);
+
+			var buffer = plm_buffer_create_with_callbacks(LoadCallback, SeekCallback, TellCallback,
+				(ulong)stream.Position, context);
+
+			return plm_create_with_buffer(buffer, 0);
+		}
+
+		public static plm_t plm_create_with_bytes(byte[] data)
+		{
+			unsafe
+			{
+				fixed (byte* ptr = data)
+				{
+					return plm_create_with_memory(ptr, (ulong)data.Length, 0);
+				}
+			}
+		}
+
 		public static short plm_buffer_read_vlc(plm_buffer_t self, plm_vlc_t[] table)
 		{
 			fixed (plm_vlc_t* ptr = table)

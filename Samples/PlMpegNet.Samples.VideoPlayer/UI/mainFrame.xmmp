@@ -6,12 +6,15 @@
       <Button Id="_buttonPlayStop">
         <Label Text="Play" />
       </Button>
-      <HorizontalSlider Maximum="1" Value="0.5" Id="_sliderTime" StackPanel.ProportionType="Fill" />
+      <HorizontalSlider Maximum="1" Id="_sliderTime" StackPanel.ProportionType="Fill" />
       <Label Text="00:05/03:00" Id="_labelTime" />
     </HorizontalStackPanel>
-    <HorizontalStackPanel Spacing="8" HorizontalAlignment="Right">
-      <Label Text="Volume" />
-      <HorizontalSlider Maximum="1" Value="1" Width="200" Id="_sliderVolume" />
-    </HorizontalStackPanel>
+    <Panel>
+      <Label Text="Allocations:" Id="_labelAllocations" />
+      <HorizontalStackPanel Spacing="8" HorizontalAlignment="Right">
+        <Label Text="Volume" />
+        <HorizontalSlider Maximum="1" Value="1" Width="200" Id="_sliderVolume" />
+      </HorizontalStackPanel>
+    </Panel>
   </VerticalStackPanel>
 </Project>
