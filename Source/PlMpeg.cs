@@ -124,5 +124,53 @@ namespace PlMpegSharp
 
 			return self.bit_index >> 3;
 		}
+
+		public static void plm_frame_to_rgb(plm_frame_t frame, byte[] dest, int stride)
+		{
+			fixed (byte* ptr = dest)
+			{
+				plm_frame_to_rgb(frame, ptr, stride);
+			}
+		}
+
+		public static void plm_frame_to_bgr(plm_frame_t frame, byte[] dest, int stride)
+		{
+			fixed (byte* ptr = dest)
+			{
+				plm_frame_to_bgr(frame, ptr, stride);
+			}
+		}
+
+		public static void plm_frame_to_rgba(plm_frame_t frame, byte[] dest, int stride)
+		{
+			fixed (byte* ptr = dest)
+			{
+				plm_frame_to_rgba(frame, ptr, stride);
+			}
+		}
+
+		public static void plm_frame_to_bgra(plm_frame_t frame, byte[] dest, int stride)
+		{
+			fixed (byte* ptr = dest)
+			{
+				plm_frame_to_bgra(frame, ptr, stride);
+			}
+		}
+
+		public static void plm_frame_to_argb(plm_frame_t frame, byte[] dest, int stride)
+		{
+			fixed (byte* ptr = dest)
+			{
+				plm_frame_to_argb(frame, ptr, stride);
+			}
+		}
+
+		public static void plm_frame_to_abgr(plm_frame_t frame, byte[] dest, int stride)
+		{
+			fixed (byte* ptr = dest)
+			{
+				plm_frame_to_abgr(frame, ptr, stride);
+			}
+		}
 	}
 }

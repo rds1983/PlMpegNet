@@ -2,12 +2,11 @@
 using PlMpegNet.AutoComparer;
 using System;
 using System.IO;
-using System.Runtime.InteropServices;
 using static PlMpegSharp.PlMpeg;
 
 namespace PlMpegSharp.AutoComparer
 {
-	internal unsafe class Program
+	internal static class Program
 	{
 		static void Main(string[] args)
 		{
@@ -41,11 +40,7 @@ namespace PlMpegSharp.AutoComparer
 			{
 				Console.WriteLine($"Frame #{i}");
 
-				fixed (byte* ptr = pixels)
-				{
-					plm_frame_to_rgb(frame, ptr, width * 3);
-				}
-
+				plm_frame_to_rgb(frame, pixels, width * 3);
 				Native.get_next_frame_rgb(pixels2);
 
 				// Compare pixels

@@ -5,7 +5,7 @@ using static PlMpegSharp.PlMpeg;
 
 namespace PlMpegSharp.Samples.ExtractFrames
 {
-	internal unsafe class Program
+	internal class Program
 	{
 		static void Main(string[] args)
 		{
@@ -36,10 +36,7 @@ namespace PlMpegSharp.Samples.ExtractFrames
 			var i = 1;
 			while ((frame = plm_decode_video(plm)) != null)
 			{
-				fixed (byte* ptr = pixels)
-				{
-					plm_frame_to_rgb(frame, ptr, width * 3);
-				}
+				plm_frame_to_rgb(frame, pixels, width * 3);
 
 				var path = $"output/{file}_{i}.png";
 				using (Stream stream = File.OpenWrite(path))

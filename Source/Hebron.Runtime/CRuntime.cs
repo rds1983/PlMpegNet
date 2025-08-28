@@ -5,8 +5,6 @@ namespace Hebron.Runtime
 {
 	public static unsafe class CRuntime
 	{
-		private static readonly string numbers = "0123456789";
-
 		public static void* malloc(ulong size)
 		{
 			return malloc((long)size);

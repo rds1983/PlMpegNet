@@ -48,14 +48,7 @@ namespace PlMpegNet.Samples.VideoPlayer.MonoGame.UI
 
 		private void OnVideoCallback(plm_t plm, plm_frame_t arg1, object arg2)
 		{
-			unsafe
-			{
-				fixed (byte* ptr = _dataRgba)
-				{
-					plm_frame_to_rgba(arg1, ptr, _size.X * 4);
-				}
-			}
-
+			plm_frame_to_rgba(arg1, _dataRgba, _size.X * 4);
 			if (_texture == null || _texture.Width != _size.X || _texture.Height != _size.Y)
 			{
 				_texture = new Texture2D(MyraEnvironment.GraphicsDevice, _size.X, _size.Y);
