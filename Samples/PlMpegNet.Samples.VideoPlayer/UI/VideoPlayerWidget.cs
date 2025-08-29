@@ -15,15 +15,16 @@ namespace PlMpegNet.Samples.VideoPlayer.MonoGame.UI
 	public class VideoPlayerWidget : Widget
 	{
 		private DynamicSoundEffectInstance _effect;
-		private plm_t _plm;
-		private Point _size;
+		private Video _video;
 		private byte[] _audioBuffer;
 		private Texture2D _yTexture, _crTexture, _cbTexture;
 		private readonly VideoEffect _videoEffect = new VideoEffect();
 		private readonly SpriteBatch _spriteBatch = new SpriteBatch(MyraEnvironment.GraphicsDevice);
 		private readonly Stopwatch _stopWatch = new Stopwatch();
 		private float _positionInSeconds = 0;
+		private Point _size;
 
+		public Video Video => _video;
 
 		public float Volume
 		{
@@ -67,7 +68,7 @@ namespace PlMpegNet.Samples.VideoPlayer.MonoGame.UI
 			}
 		}
 
-		public float DurationInSeconds { get; private set; }
+		public float DurationInSeconds => _video.DurationInSeconds;
 
 		public event EventHandler PositionInSecondsChanged;
 		public event EventHandler IsPlayingChanged;
@@ -89,7 +90,7 @@ namespace PlMpegNet.Samples.VideoPlayer.MonoGame.UI
 
 			if (doSeek)
 			{
-				plm_seek(_plm, value, 0);
+				_video.Seek(value, false);
 			}
 		}
 		private void UpdateTexture(ref Texture2D texture, plm_plane_t plane)
@@ -102,14 +103,14 @@ namespace PlMpegNet.Samples.VideoPlayer.MonoGame.UI
 			texture.SetData(plane.data);
 		}
 
-		private void OnVideoCallback(plm_t plm, plm_frame_t plane, object user)
+		private void OnVideoCallback(plm_frame_t frame)
 		{
-			UpdateTexture(ref _yTexture, plane.y);
-			UpdateTexture(ref _crTexture, plane.cr);
-			UpdateTexture(ref _cbTexture, plane.cb);
+			UpdateTexture(ref _yTexture, frame.y);
+			UpdateTexture(ref _crTexture, frame.cr);
+			UpdateTexture(ref _cbTexture, frame.cb);
 		}
 
-		private void OnAudioCallback(plm_t plm, plm_samples_t samples, object arg)
+		private void OnAudioCallback(plm_samples_t samples)
 		{
 			if (samples.count == 0)
 			{
@@ -162,28 +163,25 @@ namespace PlMpegNet.Samples.VideoPlayer.MonoGame.UI
 		public void Load(string path)
 		{
 			var stream = File.OpenRead(path);
-			_plm = plm_create_with_stream(stream);
+			_video = Video.FromStream(stream);
 
-			if (plm_probe(_plm, 5000 * 1024) == 0)
+			if (!_video.Probe(5000 * 1024))
 			{
 				throw new Exception("No MPEG video or audio streams found.");
 			}
 
-			plm_set_video_decode_callback(_plm, OnVideoCallback, null);
-			plm_set_audio_decode_callback(_plm, OnAudioCallback, null);
-			plm_set_loop(_plm, 1);
+			_video.VideoCallback = OnVideoCallback;
+			_video.AudioCallback = OnAudioCallback;
+			_video.AudioEnabled = true;
+			_video.AudioStreamNumber = 0;
 
-			plm_set_audio_enabled(_plm, 1);
-			plm_set_audio_stream(_plm, 0);
+			_size.X = _video.Width;
+			_size.Y = _video.Height;
 
-			_size.X = plm_get_width(_plm);
-			_size.Y = plm_get_height(_plm);
-
-			DurationInSeconds = (float)plm_get_duration(_plm);
 			SetPositionInSeconds(0, false);
 			IsPlaying = true;
 
-			var sampleRate = plm_get_samplerate(_plm);
+			var sampleRate = _video.SampleRate;
 			Debug.WriteLine($"Sample rate: {sampleRate}");
 
 			_effect = new DynamicSoundEffectInstance(sampleRate, (AudioChannels)2)
@@ -196,8 +194,6 @@ namespace PlMpegNet.Samples.VideoPlayer.MonoGame.UI
 			GC.Collect();
 		}
 
-
-
 		public override void InternalRender(RenderContext context)
 		{
 			base.InternalRender(context);
@@ -207,8 +203,8 @@ namespace PlMpegNet.Samples.VideoPlayer.MonoGame.UI
 				var passed = (float)_stopWatch.Elapsed.TotalSeconds;
 				_stopWatch.Restart();
 
-				plm_decode(_plm, passed);
-				SetPositionInSeconds((float)plm_get_time(_plm), false);
+				_video.Decode(passed);
+				SetPositionInSeconds(_video.PositionInSeconds, false);
 			}
 
 			_videoEffect.YTexture = _yTexture;

@@ -85,7 +85,7 @@ namespace PlMpegSharp
 			var buffer = plm_buffer_create_with_callbacks(LoadCallback, SeekCallback, TellCallback,
 				(ulong)length, context);
 
-			return plm_create_with_buffer(buffer, 0);
+			return plm_create_with_buffer(buffer, 1);
 		}
 
 		public static plm_t plm_create_with_bytes(byte[] data)

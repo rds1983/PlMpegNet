@@ -8,8 +8,8 @@ namespace PlMpegSharp
 {
 	unsafe partial class PlMpeg
 	{
-		public delegate void plm_video_decode_callback(plm_t arg0, plm_frame_t plane, object user);
-		public delegate void plm_audio_decode_callback(plm_t arg0, plm_samples_t samples, object user);
+		public delegate void plm_video_decode_callback(plm_t plm, plm_frame_t plane, object user);
+		public delegate void plm_audio_decode_callback(plm_t plm, plm_samples_t samples, object user);
 		public delegate void plm_buffer_load_callback(plm_buffer_t buffer, object user);
 		public delegate void plm_buffer_seek_callback(plm_buffer_t buffer, ulong offset, object user);
 		public delegate ulong plm_buffer_tell_callback(plm_buffer_t buffer, object user);
@@ -524,8 +524,6 @@ namespace PlMpegSharp
 			{
 				plm_buffer_destroy(self.buffer);
 			}
-
-
 		}
 		public static int plm_demux_has_headers(plm_demux_t self)
 		{

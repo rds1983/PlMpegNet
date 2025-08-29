@@ -55,7 +55,7 @@ namespace PlMpegNet.Samples.VideoPlayer
 		protected override void UnloadContent()
 		{
 			// TODO: Unload any non ContentManager content here
-			// _vorbis.Dispose();
+			_mainFrame.Video.Dispose();
 		}
 
 		/// <summary>

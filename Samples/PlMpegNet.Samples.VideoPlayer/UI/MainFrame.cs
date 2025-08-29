@@ -11,6 +11,8 @@ namespace PlMpegNet.Samples.VideoPlayer.UI
 		private readonly VideoPlayerWidget _videoPlayer;
 		private bool _updateSlider = true;
 
+		public Video Video => _videoPlayer.Video;
+
 		public MainFrame()
 		{
 			BuildUI();
