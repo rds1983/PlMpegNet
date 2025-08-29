@@ -22,6 +22,6 @@ jobs:
       with:
         dotnet-version: '8.0.x'
     - name: Build PlMpegNet
-      run: dotnet build PlMpegNet.sln --configuration Release
+      run: dotnet build PlMpegNet.Simple.sln --configuration Release
     - name: Test
-      run: dotnet test PlMpegNet.sln
+      run: dotnet test PlMpegNet.Simple.sln
