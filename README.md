@@ -1,3 +1,7 @@
+[![NuGet](https://img.shields.io/nuget/v/PlMpegNet.svg)](https://www.nuget.org/packages/PlMpegNet/)
+![Build & Publish](https://github.com/rds1983/PlMpegNet/workflows/Build%20&%20Publish/badge.svg)
+[![Chat](https://img.shields.io/discord/628186029488340992.svg)](https://discord.gg/ZeHxhCY)
+
 # PlMpegNet
 PlMpegNet is C# port of the [pl_mpeg](https://github.com/phoboslab/pl_mpeg), which is C library to decode MPEG1 Video and MP2 Audio.
 
