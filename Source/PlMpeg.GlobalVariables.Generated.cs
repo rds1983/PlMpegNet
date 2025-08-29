@@ -6,7 +6,7 @@ using Hebron.Runtime;
 
 namespace PlMpegSharp
 {
-	unsafe partial class PlMpeg
+	partial class PlMpeg
 	{
 
 		public static int PLM_DEMUX_PACKET_PRIVATE = (int)(0xBD);

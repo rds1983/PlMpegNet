@@ -3,7 +3,7 @@
         <Authors>PlMpegNetTeam</Authors>
         <Product>PlMpegNet</Product>
         <PackageId>PlMpegNet</PackageId>
-        <TargetFrameworks>netstandard2.0</TargetFrameworks>
+        <TargetFrameworks>net6.0</TargetFrameworks>
         <Description>C# Port of https://github.com/PlMpeg/PlMpeg</Description>
         <PackageLicenseUrl>Public Domain</PackageLicenseUrl>
         <PackageProjectUrl>https://github.com/rds1983/PlMpegNet</PackageProjectUrl>

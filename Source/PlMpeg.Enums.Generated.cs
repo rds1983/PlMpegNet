@@ -6,7 +6,7 @@ using Hebron.Runtime;
 
 namespace PlMpegSharp
 {
-	unsafe partial class PlMpeg
+	partial class PlMpeg
 	{
 		public enum plm_buffer_mode
 		{

@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Myra;
 using Myra.Graphics2D;
 using Myra.Graphics2D.UI;
+using PlMpegNet.Samples.VideoPlayer.MonoGame.Effects;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -16,9 +17,12 @@ namespace PlMpegNet.Samples.VideoPlayer.MonoGame.UI
 		private DynamicSoundEffectInstance _effect;
 		private plm_t _plm;
 		private Point _size;
-		private byte[] _dataRgba, _audioBuffer;
-		private Texture2D _texture;
+		private byte[] _audioBuffer;
+		private Texture2D _yTexture, _crTexture, _cbTexture;
 		private float _positionInSeconds;
+		private readonly VideoEffect _videoEffect = new VideoEffect();
+		private readonly SpriteBatch _spriteBatch = new SpriteBatch(MyraEnvironment.GraphicsDevice);
+
 
 		public float Volume
 		{
@@ -46,15 +50,21 @@ namespace PlMpegNet.Samples.VideoPlayer.MonoGame.UI
 
 		public float DurationInSeconds { get; private set; }
 
-		private void OnVideoCallback(plm_t plm, plm_frame_t arg1, object arg2)
+		private void UpdateTexture(ref Texture2D texture, plm_plane_t plane)
 		{
-			plm_frame_to_rgba(arg1, _dataRgba, _size.X * 4);
-			if (_texture == null || _texture.Width != _size.X || _texture.Height != _size.Y)
+			if (texture == null || texture.Width != plane.width || texture.Height != plane.height)
 			{
-				_texture = new Texture2D(MyraEnvironment.GraphicsDevice, _size.X, _size.Y);
+				texture = new Texture2D(MyraEnvironment.GraphicsDevice, (int)plane.width, (int)plane.height, false, SurfaceFormat.Alpha8);
 			}
 
-			_texture.SetData(_dataRgba);
+			texture.SetData(plane.data);
+		}
+
+		private void OnVideoCallback(plm_t plm, plm_frame_t plane, object user)
+		{
+			UpdateTexture(ref _yTexture, plane.y);
+			UpdateTexture(ref _crTexture, plane.cr);
+			UpdateTexture(ref _cbTexture, plane.cb);
 		}
 
 		private void OnAudioCallback(plm_t plm, plm_samples_t samples, object arg)
@@ -127,8 +137,6 @@ namespace PlMpegNet.Samples.VideoPlayer.MonoGame.UI
 			_size.X = plm_get_width(_plm);
 			_size.Y = plm_get_height(_plm);
 
-			_dataRgba = new byte[_size.X * _size.Y * 4];
-
 			DurationInSeconds = (float)plm_get_duration(_plm);
 			_positionInSeconds = 0;
 
@@ -149,12 +157,33 @@ namespace PlMpegNet.Samples.VideoPlayer.MonoGame.UI
 		{
 			base.InternalRender(context);
 
-			if (_texture == null)
+			if (_yTexture == null)
 			{
 				return;
 			}
 
-			context.Draw(_texture, Vector2.Zero, Color.White);
+			_videoEffect.YTexture = _yTexture;
+			_videoEffect.CbTexture = _cbTexture;
+			_videoEffect.CrTexture = _crTexture;
+
+			var bounds = ActualBounds;
+			var p = ToGlobal(bounds.Location);
+			bounds.X = p.X;
+			bounds.Y = p.Y;
+
+			var device = MyraEnvironment.GraphicsDevice;
+			var oldViewport = device.Viewport;
+			try
+			{
+				device.Viewport = new Viewport(bounds.X, bounds.Y, bounds.Width, bounds.Height);
+				_spriteBatch.Begin(effect: _videoEffect);
+				_spriteBatch.Draw(_yTexture, Vector2.Zero, Color.White);
+				_spriteBatch.End();
+			}
+			finally
+			{
+				device.Viewport = oldViewport;
+			}
 		}
 
 		protected override Point InternalMeasure(Point availableSize)

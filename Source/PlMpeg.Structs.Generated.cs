@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 
 namespace PlMpegSharp
 {
-	unsafe partial class PlMpeg
+	partial class PlMpeg
 	{
 		public class plm_t
 		{
@@ -47,7 +47,7 @@ namespace PlMpegSharp
 			public plm_buffer_mode mode;
 		}
 
-		public unsafe class plm_demux_t
+		public class plm_demux_t
 		{
 			public plm_buffer_t buffer;
 			public int destroy_buffer_when_done;
@@ -66,7 +66,7 @@ namespace PlMpegSharp
 			public plm_packet_t next_packet = new plm_packet_t();
 		}
 
-		public unsafe class plm_video_t
+		public class plm_video_t
 		{
 			public double framerate;
 			public double pixel_aspect_ratio;
@@ -99,7 +99,6 @@ namespace PlMpegSharp
 			public plm_frame_t frame_current = new plm_frame_t();
 			public plm_frame_t frame_forward = new plm_frame_t();
 			public plm_frame_t frame_backward = new plm_frame_t();
-			public byte* frames_data;
 			public int[] block_data = new int[64];
 			public byte[] intra_quant_matrix = new byte[64];
 			public byte[] non_intra_quant_matrix = new byte[64];
@@ -107,7 +106,7 @@ namespace PlMpegSharp
 			public int assume_no_b_frames;
 		}
 
-		public unsafe class plm_audio_t
+		public class plm_audio_t
 		{
 			public double time;
 			public int samples_decoded;
@@ -160,14 +159,14 @@ namespace PlMpegSharp
 			public byte* data;
 		}
 
-		public unsafe struct plm_plane_t
+		public struct plm_plane_t
 		{
 			public uint width;
 			public uint height;
-			public byte* data;
+			public byte[] data;
 		}
 
-		public unsafe class plm_frame_t
+		public class plm_frame_t
 		{
 			public double time;
 			public uint width;
@@ -190,14 +189,14 @@ namespace PlMpegSharp
 			}
 		}
 
-		public unsafe class plm_samples_t
+		public class plm_samples_t
 		{
 			public double time;
 			public uint count;
 			public float[] interleaved = new float[2304];
 		}
 
-		public unsafe struct plm_vlc_t
+		public struct plm_vlc_t
 		{
 			public short index;
 			public short value;
@@ -209,7 +208,7 @@ namespace PlMpegSharp
 			}
 		}
 
-		public unsafe struct plm_vlc_uint_t
+		public struct plm_vlc_uint_t
 		{
 			public short index;
 			public ushort value;
@@ -221,7 +220,7 @@ namespace PlMpegSharp
 			}
 		}
 
-		public unsafe struct plm_video_motion_t
+		public struct plm_video_motion_t
 		{
 			public int full_px;
 			public int is_set;
@@ -230,7 +229,7 @@ namespace PlMpegSharp
 			public int v;
 		}
 
-		public unsafe struct plm_quantizer_spec_t
+		public struct plm_quantizer_spec_t
 		{
 			public ushort levels;
 			public byte group;

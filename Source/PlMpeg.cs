@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Runtime.InteropServices;
 
 namespace PlMpegSharp
 {
@@ -29,10 +28,10 @@ namespace PlMpegSharp
 					_buffer = new byte[bytesAvailable * 2];
 				}
 
-				var bytesRead = _inputStream.Read(_buffer, 0, bytesAvailable);
+				var output = new Span<byte>(buffer.bytes + buffer.length, bytesAvailable);
+				var bytesRead = _inputStream.Read(output);
 				if (bytesRead > 0)
 				{
-					Marshal.Copy(_buffer, 0, new IntPtr(buffer.bytes + buffer.length), bytesRead);
 					buffer.length += (ulong)bytesRead;
 				}
 				else

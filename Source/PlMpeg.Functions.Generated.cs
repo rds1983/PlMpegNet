@@ -8,11 +8,11 @@ namespace PlMpegSharp
 {
 	unsafe partial class PlMpeg
 	{
-		public delegate void plm_video_decode_callback(plm_t arg0, plm_frame_t arg1, object arg2);
-		public delegate void plm_audio_decode_callback(plm_t arg0, plm_samples_t arg1, object arg2);
-		public delegate void plm_buffer_load_callback(plm_buffer_t arg0, object arg1);
-		public delegate void plm_buffer_seek_callback(plm_buffer_t arg0, ulong arg1, object arg2);
-		public delegate ulong plm_buffer_tell_callback(plm_buffer_t arg0, object arg1);
+		public delegate void plm_video_decode_callback(plm_t arg0, plm_frame_t plane, object user);
+		public delegate void plm_audio_decode_callback(plm_t arg0, plm_samples_t samples, object user);
+		public delegate void plm_buffer_load_callback(plm_buffer_t buffer, object user);
+		public delegate void plm_buffer_seek_callback(plm_buffer_t buffer, ulong offset, object user);
+		public delegate ulong plm_buffer_tell_callback(plm_buffer_t buffer, object user);
 
 		public static plm_t plm_create_with_memory(byte* bytes, ulong length, int free_when_done)
 		{
@@ -872,13 +872,6 @@ namespace PlMpegSharp
 			{
 				plm_buffer_destroy(self.buffer);
 			}
-
-			if ((self.has_sequence_header) != 0)
-			{
-				CRuntime.free(self.frames_data);
-			}
-
-
 		}
 		public static int plm_video_has_header(plm_video_t self)
 		{
@@ -1747,17 +1740,13 @@ namespace PlMpegSharp
 			self.luma_height = (int)(self.mb_height << 4);
 			self.chroma_width = (int)(self.mb_width << 3);
 			self.chroma_height = (int)(self.mb_height << 3);
-			ulong luma_plane_size = (ulong)(self.luma_width * self.luma_height);
-			ulong chroma_plane_size = (ulong)(self.chroma_width * self.chroma_height);
-			ulong frame_data_size = (ulong)(luma_plane_size + 2 * chroma_plane_size);
-			self.frames_data = (byte*)(CRuntime.malloc((ulong)(frame_data_size * 3)));
-			plm_video_init_frame(self, self.frame_current, self.frames_data + frame_data_size * 0);
-			plm_video_init_frame(self, self.frame_forward, self.frames_data + frame_data_size * 1);
-			plm_video_init_frame(self, self.frame_backward, self.frames_data + frame_data_size * 2);
+			plm_video_init_frame(self, self.frame_current);
+			plm_video_init_frame(self, self.frame_forward);
+			plm_video_init_frame(self, self.frame_backward);
 			self.has_sequence_header = (int)(1);
 			return (int)(1);
 		}
-		public static void plm_video_init_frame(plm_video_t self, plm_frame_t frame, byte* _base_)
+		public static void plm_video_init_frame(plm_video_t self, plm_frame_t frame)
 		{
 			ulong luma_plane_size = (ulong)(self.luma_width * self.luma_height);
 			ulong chroma_plane_size = (ulong)(self.chroma_width * self.chroma_height);
@@ -1765,13 +1754,13 @@ namespace PlMpegSharp
 			frame.height = (uint)(self.height);
 			frame.y.width = (uint)(self.luma_width);
 			frame.y.height = (uint)(self.luma_height);
-			frame.y.data = _base_;
+			frame.y.data = new byte[luma_plane_size];
 			frame.cr.width = (uint)(self.chroma_width);
 			frame.cr.height = (uint)(self.chroma_height);
-			frame.cr.data = _base_ + luma_plane_size;
+			frame.cr.data = new byte[chroma_plane_size];
 			frame.cb.width = (uint)(self.chroma_width);
 			frame.cb.height = (uint)(self.chroma_height);
-			frame.cb.data = _base_ + luma_plane_size + chroma_plane_size;
+			frame.cb.data = new byte[chroma_plane_size];
 		}
 		public static void plm_video_decode_picture(plm_video_t self)
 		{
@@ -2056,7 +2045,7 @@ namespace PlMpegSharp
 			plm_video_process_macroblock(self, s.cr.data, d.cr.data, (int)(motion_h / 2), (int)(motion_v / 2), (int)(8), (int)(1));
 			plm_video_process_macroblock(self, s.cb.data, d.cb.data, (int)(motion_h / 2), (int)(motion_v / 2), (int)(8), (int)(1));
 		}
-		public static void plm_video_process_macroblock(plm_video_t self, byte* s, byte* d, int motion_h, int motion_v, int block_size, int interpolate)
+		public static void plm_video_process_macroblock(plm_video_t self, byte[] s, byte[] d, int motion_h, int motion_v, int block_size, int interpolate)
 		{
 			int dw = (int)(self.mb_width * block_size);
 			int hp = (int)(motion_h >> 1);
@@ -2342,7 +2331,7 @@ namespace PlMpegSharp
 				self.block_data[de_zig_zagged] = (int)(level * PLM_VIDEO_PREMULTIPLIER_MATRIX[de_zig_zagged]);
 			}
 
-			byte* d;
+			byte[] d;
 			int dw = 0;
 			int di = 0;
 			if ((block) < (4))
