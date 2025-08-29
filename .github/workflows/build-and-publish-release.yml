@@ -22,4 +22,4 @@ jobs:
     - name: Install NuGet
       uses: NuGet/setup-nuget@v1
     - name: Publish PlMpegNet to NuGet
-      run: nuget.exe push src\bin\Release\PlMpegNet.*.nupkg ${{secrets.NUGET_APIKEY}} -Source https://api.nuget.org/v3/index.json
+      run: nuget.exe push Source\bin\Release\PlMpegNet.*.nupkg ${{secrets.NUGET_APIKEY}} -Source https://api.nuget.org/v3/index.json
