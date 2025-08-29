@@ -1,5 +1,5 @@
 [![NuGet](https://img.shields.io/nuget/v/PlMpegNet.svg)](https://www.nuget.org/packages/PlMpegNet/)
-![Build & Publish](https://github.com/rds1983/PlMpegNet/workflows/Build%20&%20Publish/badge.svg)
+[![Build & Publish Beta](https://github.com/rds1983/PlMpegNet/actions/workflows/build-and-publish-beta.yml/badge.svg)](https://github.com/rds1983/PlMpegNet/actions/workflows/build-and-publish-beta.yml)
 [![Chat](https://img.shields.io/discord/628186029488340992.svg)](https://discord.gg/ZeHxhCY)
 
 # PlMpegNet
