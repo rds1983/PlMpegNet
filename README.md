@@ -11,7 +11,8 @@ The porting hasn't been done by hand, but using [Hebron](https://github.com/rds1
 
 # Usage
 Check [Samples](Samples)
-Particulary [VideoPlayerWidget.cs]
+
+Particularly [VideoPlayerWidget.cs](Samples/PlMpegNet.Samples.VideoPlayer/UI/VideoPlayerWidget.cs) contains code that interacts with the PlMpegNet
 
 ## Test Mpeg
 If you just want to quickly test the library, try this file:
