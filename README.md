@@ -9,6 +9,10 @@ It is important to note, that this project is **port**(not **wrapper**). Origina
 
 The porting hasn't been done by hand, but using [Hebron](https://github.com/rds1983/Hebron), which is the C to C# code converter utility.
 
+# Usage
+Check [Samples](Samples)
+Particulary [VideoPlayerWidget.cs]
+
 ## Test Mpeg
 If you just want to quickly test the library, try this file:
 
