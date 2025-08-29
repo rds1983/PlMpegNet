@@ -19,9 +19,10 @@ namespace PlMpegNet.Samples.VideoPlayer.MonoGame.UI
 		private Point _size;
 		private byte[] _audioBuffer;
 		private Texture2D _yTexture, _crTexture, _cbTexture;
-		private float _positionInSeconds;
 		private readonly VideoEffect _videoEffect = new VideoEffect();
 		private readonly SpriteBatch _spriteBatch = new SpriteBatch(MyraEnvironment.GraphicsDevice);
+		private readonly Stopwatch _stopWatch = new Stopwatch();
+		private float _positionInSeconds = 0;
 
 
 		public float Volume
@@ -35,21 +36,62 @@ namespace PlMpegNet.Samples.VideoPlayer.MonoGame.UI
 		{
 			get => _positionInSeconds;
 
+			set => SetPositionInSeconds(value, true);
+		}
+
+		public bool IsPlaying
+		{
+			get => _stopWatch.IsRunning;
+
 			set
 			{
-				if (value.EpsilonEquals(_positionInSeconds))
+				if (value == IsPlaying)
 				{
 					return;
 				}
 
-				var oldValue = _positionInSeconds;
-				_positionInSeconds = value;
-				plm_decode(_plm, value - oldValue);
+				if (value)
+				{
+					_stopWatch.Start();
+				}
+				else
+				{
+					_stopWatch.Stop();
+				}
+
+				var ev = IsPlayingChanged;
+				if (ev != null)
+				{
+					ev(this, EventArgs.Empty);
+				}
 			}
 		}
 
 		public float DurationInSeconds { get; private set; }
 
+		public event EventHandler PositionInSecondsChanged;
+		public event EventHandler IsPlayingChanged;
+
+		private void SetPositionInSeconds(float value, bool doSeek)
+		{
+			if (value.EpsilonEquals(_positionInSeconds))
+			{
+				return;
+			}
+
+			_positionInSeconds = value;
+
+			var ev = PositionInSecondsChanged;
+			if (ev != null)
+			{
+				ev(this, EventArgs.Empty);
+			}
+
+			if (doSeek)
+			{
+				plm_seek(_plm, value, 0);
+			}
+		}
 		private void UpdateTexture(ref Texture2D texture, plm_plane_t plane)
 		{
 			if (texture == null || texture.Width != plane.width || texture.Height != plane.height)
@@ -138,7 +180,8 @@ namespace PlMpegNet.Samples.VideoPlayer.MonoGame.UI
 			_size.Y = plm_get_height(_plm);
 
 			DurationInSeconds = (float)plm_get_duration(_plm);
-			_positionInSeconds = 0;
+			SetPositionInSeconds(0, false);
+			IsPlaying = true;
 
 			var sampleRate = plm_get_samplerate(_plm);
 			Debug.WriteLine($"Sample rate: {sampleRate}");
@@ -153,13 +196,19 @@ namespace PlMpegNet.Samples.VideoPlayer.MonoGame.UI
 			GC.Collect();
 		}
 
+
+
 		public override void InternalRender(RenderContext context)
 		{
 			base.InternalRender(context);
 
-			if (_yTexture == null)
+			if (_stopWatch.IsRunning)
 			{
-				return;
+				var passed = (float)_stopWatch.Elapsed.TotalSeconds;
+				_stopWatch.Restart();
+
+				plm_decode(_plm, passed);
+				SetPositionInSeconds((float)plm_get_time(_plm), false);
 			}
 
 			_videoEffect.YTexture = _yTexture;

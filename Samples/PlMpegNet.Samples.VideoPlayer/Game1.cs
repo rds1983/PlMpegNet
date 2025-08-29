@@ -52,10 +52,6 @@ namespace PlMpegNet.Samples.VideoPlayer
 			_mainFrame.LoadVideo(_path);
 		}
 
-		/// <summary>
-		/// UnloadContent will be called once per game and is the place to unload
-		/// game-specific content.
-		/// </summary>
 		protected override void UnloadContent()
 		{
 			// TODO: Unload any non ContentManager content here
@@ -74,7 +70,6 @@ namespace PlMpegNet.Samples.VideoPlayer
 				Exit();
 
 			// TODO: Add your update logic here
-			_mainFrame.PositionInSeconds = (float)gameTime.TotalGameTime.TotalSeconds;
 		}
 
 		/// <summary>

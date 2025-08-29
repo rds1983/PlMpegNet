@@ -77,12 +77,13 @@ namespace PlMpegSharp
 			}
 
 			var size = stream.Seek(0, SeekOrigin.End);
+			var length = stream.Position;
 			stream.Seek(0, SeekOrigin.Begin);
 
 			var context = new ReadContext(stream);
 
 			var buffer = plm_buffer_create_with_callbacks(LoadCallback, SeekCallback, TellCallback,
-				(ulong)stream.Position, context);
+				(ulong)length, context);
 
 			return plm_create_with_buffer(buffer, 0);
 		}
