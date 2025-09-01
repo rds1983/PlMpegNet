@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using Myra;
 
-namespace PlMpegNet.Samples.VideoPlayer.MonoGame.Effects
+namespace PlMpegNet.Samples.VideoPlayer.Effects
 {
 	public class VideoEffect : Effect
 	{

@@ -1,8 +1,6 @@
 using Hebron.Runtime;
 using Myra.Events;
 using Myra.Graphics2D.UI;
-using PlMpegNet.Samples.VideoPlayer.MonoGame;
-using PlMpegNet.Samples.VideoPlayer.MonoGame.UI;
 
 namespace PlMpegNet.Samples.VideoPlayer.UI
 {

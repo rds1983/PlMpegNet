@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace PlMpegNet.Samples.VideoPlayer.MonoGame {
+namespace PlMpegNet.Samples.VideoPlayer {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace PlMpegNet.Samples.VideoPlayer.MonoGame {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("PlMpegNet.Samples.VideoPlayer.MonoGame.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("PlMpegNet.Samples.VideoPlayer.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

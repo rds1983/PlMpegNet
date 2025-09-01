@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PlMpegNet.Samples.VideoPlayer.MonoGame
+namespace PlMpegNet.Samples.VideoPlayer
 {
 	internal static class Utility
 	{

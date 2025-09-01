@@ -2,7 +2,11 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>$(AppTargetFramework)</TargetFramework>
+    <DefineConstants>$(DefineConstants);MONOGAME</DefineConstants>
+    <PackageId>PlMpegNet.Samples.VideoPlayer</PackageId>
+    <AssemblyName>PlMpegNet.Samples.VideoPlayer</AssemblyName>
+    <RootNamespace>PlMpegNet.Samples.VideoPlayer</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
