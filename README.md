@@ -2,7 +2,7 @@
 [![Build & Publish Beta](https://github.com/rds1983/PlMpegNet/actions/workflows/build-and-publish-beta.yml/badge.svg)](https://github.com/rds1983/PlMpegNet/actions/workflows/build-and-publish-beta.yml)
 [![Chat](https://img.shields.io/discord/628186029488340992.svg)](https://discord.gg/ZeHxhCY)
 
-<img width="1402" height="992" alt="image" src="https://github.com/user-attachments/assets/9bcc2565-5772-416c-b1c1-16606b1b241a" />
+<img width="1402" height="992" alt="Example screenshot" src="https://github.com/user-attachments/assets/9bcc2565-5772-416c-b1c1-16606b1b241a" />
 
 ## PlMpegNet
 PlMpegNet is C# port of the [pl_mpeg](https://github.com/phoboslab/pl_mpeg), which is C library to decode MPEG1 Video and MP2 Audio.
@@ -18,7 +18,7 @@ The library is available at NuGet: https://www.nuget.org/packages/PlMpegNet/
 ## Usage
 Check [Samples](Samples)
 
-Particularly [VideoPlayerWidget.cs](Samples/PlMpegNet.Samples.VideoPlayer/UI/VideoPlayerWidget.cs) contains code that interacts with the PlMpegNet
+Particularly [VideoPlayerWidget.cs](Samples/PlMpegNet.Samples.MonoGame.VideoPlayer/UI/VideoPlayerWidget.cs) contains code that interacts with the PlMpegNet
 
 ## Test Mpeg
 https://phoboslab.org/files/bjork-all-is-full-of-love.mpg
