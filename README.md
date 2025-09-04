@@ -18,7 +18,7 @@ The library is available at NuGet: https://www.nuget.org/packages/PlMpegNet/
 ## Usage
 Check [Samples](Samples)
 
-Particularly [VideoPlayerWidget.cs](Samples/PlMpegNet.Samples.VideoPlayer/UI/VideoPlayerWidget.cs) contains code that interacts with the PlMpegNet
+Particularly [VideoPlayerWidget.cs](Samples/PlMpegNet.Samples.MonoGame.VideoPlayer/UI/VideoPlayerWidget.cs) contains code that interacts with the PlMpegNet
 
 ## Test Mpeg
 https://phoboslab.org/files/bjork-all-is-full-of-love.mpg
