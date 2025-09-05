@@ -1,9 +1,9 @@
 ﻿using StbImageWriteSharp;
 using System;
 using System.IO;
-using static PlMpegSharp.PlMpeg;
+using static PlMpegNet.PlMpeg;
 
-namespace PlMpegSharp.Samples.ExtractFrames
+namespace PlMpegNet.Samples.ExtractFrames
 {
 	internal class Program
 	{

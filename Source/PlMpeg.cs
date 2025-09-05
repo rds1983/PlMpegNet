@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace PlMpegSharp
+namespace PlMpegNet
 {
 	public static unsafe partial class PlMpeg
 	{

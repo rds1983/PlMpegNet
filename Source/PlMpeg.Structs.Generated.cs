@@ -3,7 +3,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace PlMpegSharp
+namespace PlMpegNet
 {
 	partial class PlMpeg
 	{

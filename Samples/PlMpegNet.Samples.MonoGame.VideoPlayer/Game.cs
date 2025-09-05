@@ -10,7 +10,7 @@ namespace PlMpegNet.Samples.VideoPlayer
 	/// <summary>
 	/// This is the main type for your game.
 	/// </summary>
-	public class Game1 : Game
+	public class Game : Microsoft.Xna.Framework.Game
 	{
 		private GraphicsDeviceManager _graphics;
 		private SpriteBatch _spriteBatch;
@@ -18,7 +18,7 @@ namespace PlMpegNet.Samples.VideoPlayer
 		private MainFrame _mainFrame;
 		private Desktop _desktop;
 
-		public Game1(string path)
+		public Game(string path)
 		{
 			_path = path;
 

@@ -4,11 +4,10 @@ using System;
 using System.Runtime.InteropServices;
 using Hebron.Runtime;
 
-namespace PlMpegSharp
+namespace PlMpegNet
 {
 	partial class PlMpeg
 	{
-
 		public static int PLM_DEMUX_PACKET_PRIVATE = (int)(0xBD);
 		public static int PLM_DEMUX_PACKET_AUDIO_1 = (int)(0xC0);
 		public static int PLM_DEMUX_PACKET_AUDIO_2 = (int)(0xC1);

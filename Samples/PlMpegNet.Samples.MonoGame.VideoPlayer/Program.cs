@@ -21,7 +21,7 @@ namespace PlMpegNet.Samples.VideoPlayer
 					return;
 				}
 
-				using (var game = new Game1(args[0]))
+				using (var game = new Game(args[0]))
 					game.Run();
 			}
 			catch (Exception ex)

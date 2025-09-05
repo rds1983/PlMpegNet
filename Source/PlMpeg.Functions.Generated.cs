@@ -4,7 +4,7 @@ using System;
 using System.Runtime.InteropServices;
 using Hebron.Runtime;
 
-namespace PlMpegSharp
+namespace PlMpegNet
 {
 	unsafe partial class PlMpeg
 	{

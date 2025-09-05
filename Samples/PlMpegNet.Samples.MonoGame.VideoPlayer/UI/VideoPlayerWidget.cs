@@ -8,7 +8,7 @@ using PlMpegNet.Samples.VideoPlayer.Effects;
 using System;
 using System.Diagnostics;
 using System.IO;
-using static PlMpegSharp.PlMpeg;
+using static PlMpegNet.PlMpeg;
 
 namespace PlMpegNet.Samples.VideoPlayer.UI
 {
