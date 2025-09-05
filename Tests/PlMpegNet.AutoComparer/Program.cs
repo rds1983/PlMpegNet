@@ -2,7 +2,7 @@
 using PlMpegNet.AutoComparer;
 using System;
 using System.IO;
-using static PlMpegSharp.PlMpeg;
+using static PlMpegNet.PlMpeg;
 
 namespace PlMpegSharp.AutoComparer
 {
