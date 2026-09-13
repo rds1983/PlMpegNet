@@ -8,7 +8,6 @@ namespace PlMpegNet
 		private class ReadContext
 		{
 			public Stream _inputStream;
-			public byte[] _buffer;
 
 			public ReadContext(Stream stream)
 			{
@@ -23,11 +22,6 @@ namespace PlMpegNet
 				}
 
 				var bytesAvailable = (int)(buffer.capacity - buffer.length);
-				if (_buffer == null || _buffer.Length < bytesAvailable)
-				{
-					_buffer = new byte[bytesAvailable * 2];
-				}
-
 				var output = new Span<byte>(buffer.bytes + buffer.length, bytesAvailable);
 				var bytesRead = _inputStream.Read(output);
 				if (bytesRead > 0)
