@@ -1,5 +1,8 @@
 ﻿using System;
 using System.IO;
+#if NETSTANDARD2_0
+using System.Runtime.InteropServices;
+#endif
 
 namespace PlMpegNet
 {
@@ -8,6 +11,9 @@ namespace PlMpegNet
 		private class ReadContext
 		{
 			public Stream _inputStream;
+#if NETSTANDARD2_0
+			private byte[] _readBuffer;
+#endif
 
 			public ReadContext(Stream stream)
 			{
@@ -22,8 +28,7 @@ namespace PlMpegNet
 				}
 
 				var bytesAvailable = (int)(buffer.capacity - buffer.length);
-				var output = new Span<byte>(buffer.bytes + buffer.length, bytesAvailable);
-				var bytesRead = _inputStream.Read(output);
+				var bytesRead = Read(buffer.bytes + buffer.length, bytesAvailable);
 				if (bytesRead > 0)
 				{
 					buffer.length += (ulong)bytesRead;
@@ -32,6 +37,27 @@ namespace PlMpegNet
 				{
 					buffer.has_ended = 1;
 				}
+			}
+
+			private int Read(byte* output, int count)
+			{
+#if NETSTANDARD2_0
+				// Stream.Read(Span<byte>) is not available, so read into a managed buffer and copy it over
+				if (_readBuffer == null || _readBuffer.Length < count)
+				{
+					_readBuffer = new byte[count];
+				}
+
+				var bytesRead = _inputStream.Read(_readBuffer, 0, count);
+				if (bytesRead > 0)
+				{
+					Marshal.Copy(_readBuffer, 0, (IntPtr)output, bytesRead);
+				}
+
+				return bytesRead;
+#else
+				return _inputStream.Read(new Span<byte>(output, count));
+#endif
 			}
 
 			public void SeekCallback(plm_buffer_t buffer, ulong offset)
