@@ -39,6 +39,10 @@ namespace PlMpegNet
 				}
 			}
 
+			/// <summary>
+			/// Reads until count bytes are read or the stream ends, as Stream.Read may return fewer bytes
+			/// than requested before the end, which the decoder would treat as the end of the data.
+			/// </summary>
 			private int Read(byte* output, int count)
 			{
 #if NETSTANDARD2_0
@@ -47,17 +51,32 @@ namespace PlMpegNet
 				{
 					_readBuffer = new byte[count];
 				}
+#endif
 
-				var bytesRead = _inputStream.Read(_readBuffer, 0, count);
-				if (bytesRead > 0)
+				var total = 0;
+				while (total < count)
 				{
-					Marshal.Copy(_readBuffer, 0, (IntPtr)output, bytesRead);
+#if NETSTANDARD2_0
+					var bytesRead = _inputStream.Read(_readBuffer, total, count - total);
+#else
+					var bytesRead = _inputStream.Read(new Span<byte>(output + total, count - total));
+#endif
+					if (bytesRead <= 0)
+					{
+						break;
+					}
+
+					total += bytesRead;
 				}
 
-				return bytesRead;
-#else
-				return _inputStream.Read(new Span<byte>(output, count));
+#if NETSTANDARD2_0
+				if (total > 0)
+				{
+					Marshal.Copy(_readBuffer, 0, (IntPtr)output, total);
+				}
 #endif
+
+				return total;
 			}
 
 			public void SeekCallback(plm_buffer_t buffer, ulong offset)
