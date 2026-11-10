@@ -1808,7 +1808,7 @@ namespace PlMpegNet
 			while ((((self.start_code) >= (PLM_START_SLICE_FIRST)) && ((self.start_code) <= (PLM_START_SLICE_LAST))))
 			{
 				plm_video_decode_slice(self, (int)(self.start_code & 0x000000FF));
-				if ((self.macroblock_address) >= (self.mb_size - 2))
+				if ((self.macroblock_address) >= (self.mb_size - 1))
 				{
 					break;
 				}
