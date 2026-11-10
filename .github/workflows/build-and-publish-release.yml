@@ -6,6 +6,8 @@ on:
 jobs:
   BuildAndPublish:
     runs-on: windows-latest
+    permissions:
+      id-token: write  # enable GitHub OIDC token issuance for this job
 
     steps:
     - uses: actions/checkout@v2
@@ -19,7 +21,10 @@ jobs:
       run: dotnet build PlMpegNet.Simple.sln --configuration Release
     - name: Test
       run: dotnet test PlMpegNet.Simple.sln
-    - name: Install NuGet
-      uses: NuGet/setup-nuget@v1
+    - name: NuGet login (OIDC → temp API key)
+      uses: NuGet/login@v1
+      id: login
+      with:
+        user: ${{secrets.NUGET_USER}}
     - name: Publish PlMpegNet to NuGet
-      run: nuget.exe push Source\bin\Release\PlMpegNet.*.nupkg ${{secrets.NUGET_APIKEY}} -Source https://api.nuget.org/v3/index.json
+      run: nuget.exe push Source\bin\Release\PlMpegNet.*.nupkg ${{steps.login.outputs.NUGET_API_KEY}} -Source https://api.nuget.org/v3/index.json
